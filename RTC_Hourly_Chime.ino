@@ -46,10 +46,10 @@ void loop() {
       digitalWrite(BuzzerPin, HIGH);
       delay(1250);
       digitalWrite(BuzzerPin, LOW);
+      }
       flag = 0;
       clock.clearAlarm2();
       clock.clearAlarm1();
-    }
   } else {
     LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF); // Enter low power state.
   }
