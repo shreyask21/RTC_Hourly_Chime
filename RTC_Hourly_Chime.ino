@@ -11,6 +11,7 @@ bool flag = 0;                                // Flag for interrupt.
 
 void setup() {
   clock.begin();
+  //clock.setDateTime(2019, 06, 30, 12, 59, 56); // For manual testing. 
   //clock.setDateTime(__DATE__, __TIME__);    // Uncomment it to set RTC time according
                                               // time fetched while compiling. Make
                                               // sure to comment it out again after uploading the code.
@@ -43,14 +44,41 @@ void loop() {
     dt = clock.getDateTime();
     if (dt.hour <= 22 && dt.hour >= 7)        // Do not chime if current time is in between 22 and 7, i.e. night time.
       { 
-      digitalWrite(BuzzerPin, HIGH);
-      delay(1250);
-      digitalWrite(BuzzerPin, LOW);
+        if((hour12(dt.hour)%3)==0){
+          beep(3, 300);
+        } else if((hour12(dt.hour)%2)==0){
+          beep(2, 500);
+        } else{
+          beep(1, 1000);
+        }
       }
       flag = 0;
       clock.clearAlarm2();
       clock.clearAlarm1();
   } else {
     LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF); // Enter low power state.
+  }
+}
+
+int hour12(int hour24){ //Convert to 12 Hour
+  if (hour24 == 0)
+    {
+        return 12;
+    }
+
+  if (hour24 > 12)
+    {
+       return (hour24 - 12);
+    }
+
+  return hour24;
+}
+
+void beep(int times, int duration){
+  for (int i=0; i<times; i++){
+        digitalWrite(BuzzerPin, HIGH);
+        delay(duration);
+        digitalWrite(BuzzerPin, LOW);
+        delay(duration);
   }
 }
